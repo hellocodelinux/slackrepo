@@ -139,9 +139,9 @@ function download_src
   cd "$DOWNDIR"
   for url in $DOWNLIST; do
     # wget is good for redirects and ftp, so let's try it this way:
-    dlcmd='wget'
+    dlcmd='curl'
     # some stupid sites refuse to serve documents if the user-agent is wget or curl
-    useragent="slackrepo/1.0.0"
+    useragent="curl/7.51.0"
     # "special needs"
     case "$url" in
       # dropbox fails to redirect to the actual download if the user-agent *isn't* wget
@@ -149,18 +149,18 @@ function download_src
       # dropboxusercontent.com -- hopefully no false positives refuse wget?)
       *dropbox*)
         dlcmd="curl";
-        useragent="Wget/1.18" # this may be a lie, but who cares?
+        useragent="Wget/1.18" # Needs Wget user-agent even when using curl
         ;;
       # bitbucket redirects to a URL with a commit-based query string, but does not send
       # a content disposition header, which confuses wget, so use curl
       *bitbucket*)
         dlcmd="curl"
-        useragent="curl/7.51.0"
+        # useragent is already "curl/7.51.0"
         ;;
       # Thanks slalik for this awesome self-explanatory fix, simple and elegant and clinical :)
       *download.oracle.com*)
         dlcmd="curl";
-        useragent="curl/7.51.0"
+        # useragent is already "curl/7.51.0"
         curlboredom="${curlboredom} --cookie oraclelicense=accept-securebackup-cookie"
         ;;
     esac
